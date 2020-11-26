@@ -1,14 +1,21 @@
 package it.unibo.oop.lab.iogui;
 
 import java.awt.BorderLayout;
+
+
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Random;
-
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -38,9 +45,17 @@ public class BadIOGUI {
         final JPanel canvas = new JPanel();
         canvas.setLayout(new BorderLayout());
         final JButton write = new JButton("Write on file");
-        canvas.add(write, BorderLayout.CENTER);
         frame.setContentPane(canvas);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // EX 02.01
+        final JPanel horizontalPanel = new JPanel();
+        horizontalPanel.setLayout(new BoxLayout(horizontalPanel, BoxLayout.Y_AXIS));
+        canvas.add(horizontalPanel, BorderLayout.CENTER);
+        horizontalPanel.add(write);
+        final JButton read = new JButton("Read file");
+        horizontalPanel.add(read);
+
         /*
          * Handlers
          */
@@ -62,6 +77,22 @@ public class BadIOGUI {
                 }
             }
         });
+
+        final Path path = Paths.get(PATH);
+
+        read.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(final ActionEvent arg0) {
+
+                try (InputStream readFile = Files.newInputStream(path)) {
+                    System.out.println(Files.readAllLines(path));
+                } catch (IOException e2) {
+                    JOptionPane.showMessageDialog(frame, e2, "Error", JOptionPane.ERROR_MESSAGE);
+                    e2.printStackTrace();
+                }
+            }
+        });
     }
 
     private void display() {
@@ -77,6 +108,7 @@ public class BadIOGUI {
         final int sw = (int) screen.getWidth();
         final int sh = (int) screen.getHeight();
         frame.setSize(sw / PROPORTION, sh / PROPORTION);
+        frame.pack();
         /*
          * Instead of appearing at (0,0), upper left corner of the screen, this
          * flag makes the OS window manager take care of the default positioning
