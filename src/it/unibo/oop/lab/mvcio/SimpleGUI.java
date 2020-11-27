@@ -90,8 +90,7 @@ public final class SimpleGUI {
                 if (option == JOptionPane.OK_OPTION) {
                         try {
                             c.saveString(stringArea.getText());
-                            JOptionPane.showMessageDialog(null, "Text saved in " + c.getStringPath(),
-                                    "Done", JOptionPane.CANCEL_OPTION);
+                            JOptionPane.showMessageDialog(frame, "Text saved in " + c.getStringPath());
                         } catch (IOException e1) {
                             e1.printStackTrace();
                         }
